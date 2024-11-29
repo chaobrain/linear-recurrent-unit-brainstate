@@ -1,0 +1,10 @@
+brainstate
+einops
+optax
+torchaudio
+torchvision
+torchtext
+datasets
+tqdm
+wandb
+torch==2.3.0 # (cpu)
