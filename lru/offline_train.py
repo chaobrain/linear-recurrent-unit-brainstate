@@ -207,14 +207,14 @@ class Trainer:
     def train_step(self, inputs, labels, masks):
         """Performs a single training step given a batch of data"""
 
-        @bst.augment.vmap(in_axes=(None, 0, 0), axis_name='batch')
-        def run(model, inp, key):
+        @bst.augment.vmap
+        def run(inp, key):
             with bst.environ.context(fit=True):
                 bst.random.set_key(key)
-                return model(inp)
+                return self.model(inp)
 
         def _loss():
-            logits = run(self.model, inputs, bst.random.split_key(inputs.shape[0]))
+            logits = run(inputs, bst.random.split_key(inputs.shape[0]))
             return loss_fn(logits, labels, masks)
 
         grads, loss = bst.augment.grad(_loss, self.params, return_value=True)()
@@ -241,13 +241,13 @@ class Trainer:
     @bst.compile.jit(static_argnums=0)
     def eval_step(self, inputs, labels, masks):
 
-        @bst.augment.vmap(in_axes=(None, 0, 0), axis_name='batch')
-        def run(model, inp, key):
+        @bst.augment.vmap
+        def run(inp, key):
             with bst.environ.context(fit=False):
                 bst.random.set_key(key)
-                return model(inp)
+                return self.model(inp)
 
-        logits = run(self.model, inputs, bst.random.split_key(inputs.shape[0]))
+        logits = run(inputs, bst.random.split_key(inputs.shape[0]))
         losses = loss_fn(logits, labels, masks)
         accs = compute_accuracies(logits, labels, masks)
         return jnp.mean(losses), accs

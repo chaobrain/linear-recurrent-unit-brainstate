@@ -182,9 +182,7 @@ class LRUBlock(bst.nn.Module):
             r_max=r_max,
             max_phase=max_phase
         )
-        if norm == 'batchnorm':
-            self.norm = bst.nn.BatchNorm1d([None, d_model], axis_name='batch')
-        elif norm == 'layernorm':
+        if norm == 'layernorm':
             self.norm = bst.nn.LayerNorm([d_model])
         elif norm == 'rmsnorm':
             self.norm = bst.nn.RMSNorm([d_model])
