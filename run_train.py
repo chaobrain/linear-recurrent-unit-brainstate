@@ -40,7 +40,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("--r_min", type=float, default=0.0, help="|lambda|_min for LRU")
     parser.add_argument("--r_max", type=float, default=1.0, help="|lambda|_max for LRU")
-    parser.add_argument("--norm", type=str, default="none", choices=['layernorm', 'rmsnorm', 'none'],
+    parser.add_argument("--norm", type=str, default="none", choices=['batchnorm', 'layernorm', 'rmsnorm', 'none'],
                         help="Type of normalization")
 
     # Optimization Parameters
